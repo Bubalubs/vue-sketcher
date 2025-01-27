@@ -1,6 +1,6 @@
 {
     "name": "vue-sketcher",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A Vue 3 component for drawing and sketching on an HTML canvas",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
