@@ -1,6 +1,6 @@
 # Vue Sketcher
 
-Vue Sketcher is a lightweight and easy-to-use drawing component for Vue.js.
+Vue Sketcher is a lightweight and easy-to-use drawing component for Vue.js with no additional dependencies.
 
 # Live Demo
 
@@ -9,6 +9,7 @@ Check out the live demo [here](https://vue-sketcher.pages.dev).
 ## Features
 
 - Very lightweight and easy to use!
+- No dependencies
 - Draw smooth brush strokes & erase
 - Adjustable brush size and color picker
 - Draw rectangles and circles with a preview while dragging
