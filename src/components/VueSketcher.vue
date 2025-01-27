@@ -309,8 +309,8 @@ export default defineComponent({
             overlayCanvas.value.width = props.canvasWidth;
             overlayCanvas.value.height = props.canvasHeight;
             overlayCanvas.value.style.position = 'absolute';
-            overlayCanvas.value.style.top = '62px';
-            overlayCanvas.value.style.left = '62px';
+            overlayCanvas.value.style.top = '22px';
+            overlayCanvas.value.style.left = '22px';
             overlayCanvas.value.style.pointerEvents = 'none';
             overlayCanvas.value.style.zIndex = '10';
             overlayCtx.value = overlayCanvas.value.getContext('2d');
