@@ -4,7 +4,7 @@ Vue Sketcher is a lightweight and easy-to-use drawing component for Vue.js.
 
 # Live Demo
 
-Coming soon! 😊
+Check out the live demo [here](https://vue-sketcher.pages.dev).
 
 ## Features
 
