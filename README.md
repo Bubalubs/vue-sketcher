@@ -1,6 +1,6 @@
 # Vue Sketcher
 
-Vue Sketcher is a simple and flexible drawing library for Vue.js.
+Vue Sketcher is a lightweight and easy-to-use drawing component for Vue.js.
 
 # Live Demo
 

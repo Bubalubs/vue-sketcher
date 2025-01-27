@@ -10,5 +10,5 @@ yarn-error.log
 # Mac
 .DS_Store
 
-# Logs
-*.log
+# Demo dist
+demo/dist/
