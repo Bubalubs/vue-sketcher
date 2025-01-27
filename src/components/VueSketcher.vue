@@ -221,18 +221,18 @@ export default defineComponent({
             }
         };
 
-        const handleMouseDown = (evt: MouseEvent) => {
+        const handleMouseDown = (e: MouseEvent) => {
             if (!drawingCanvas.value) return;
             drawing.value = true;
             const rect = drawingCanvas.value.getBoundingClientRect();
-            startX.value = lastX.value = evt.clientX - rect.left;
-            startY.value = lastY.value = evt.clientY - rect.top;
+            startX.value = lastX.value = e.clientX - rect.left;
+            startY.value = lastY.value = e.clientY - rect.top;
             if (currentTool.value === 'brush' || currentTool.value === 'eraser') {
                 saveState();
             }
         };
 
-        const handleMouseUp = (evt: MouseEvent) => {
+        const handleMouseUp = () => {
             if (!drawing.value) return;
             const rect = drawingCanvas.value?.getBoundingClientRect();
             if (!rect || !ctx.value || !overlayCtx.value || !overlayCanvas.value) return;
@@ -246,11 +246,11 @@ export default defineComponent({
             drawing.value = false;
         };
 
-        const handleMouseMove = (evt: MouseEvent) => {
+        const handleMouseMove = (e: MouseEvent) => {
             if (!drawing.value || !ctx.value || !drawingCanvas.value) return;
             const rect = drawingCanvas.value.getBoundingClientRect();
-            const x = evt.clientX - rect.left;
-            const y = evt.clientY - rect.top;
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
             if (currentTool.value === 'brush') {
                 drawStroke(lastX.value, lastY.value, x, y);
@@ -285,16 +285,69 @@ export default defineComponent({
             brushSize.value = parseInt(newSize, 10);
         };
 
-        const handleBrushSizeChange = (evt: Event) => {
-            const input = evt.target as HTMLInputElement;
+        const handleBrushSizeChange = (e: Event) => {
+            const input = e.target as HTMLInputElement;
             if (!input) return;
             brushSize.value = parseInt(input.value, 10);
         };
 
-        const handleColorChange = (evt: Event) => {
-            const input = evt.target as HTMLInputElement | null;
+        const handleColorChange = (e: Event) => {
+            const input = e.target as HTMLInputElement | null;
             if (!input) return;
             updateColor(input.value);
+        };
+
+        const handleTouchStart = (e: TouchEvent) => {
+            e.preventDefault();
+            if (!drawingCanvas.value) return;
+            const rect = drawingCanvas.value.getBoundingClientRect();
+            const touch = e.touches[0];
+            startX.value = lastX.value = touch.clientX - rect.left;
+            startY.value = lastY.value = touch.clientY - rect.top;
+            drawing.value = true;
+            if (currentTool.value === 'brush' || currentTool.value === 'eraser') {
+                saveState();
+            }
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            e.preventDefault();
+            if (!drawing.value || !ctx.value || !drawingCanvas.value) return;
+            const rect = drawingCanvas.value.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+
+            if (currentTool.value === 'brush') {
+                drawStroke(lastX.value, lastY.value, x, y);
+                lastX.value = x;
+                lastY.value = y;
+            } else if (currentTool.value === 'eraser') {
+                ctx.value.strokeStyle = '#ffffff';
+                ctx.value.lineWidth = brushSize.value;
+                ctx.value.lineCap = 'round';
+                ctx.value.beginPath();
+                ctx.value.moveTo(lastX.value, lastY.value);
+                ctx.value.lineTo(x, y);
+                ctx.value.stroke();
+                lastX.value = x;
+                lastY.value = y;
+            } else if (currentTool.value === 'rectangle') {
+                drawRectangle(x, y);
+            } else if (currentTool.value === 'circle') {
+                drawCircle(x, y);
+            }
+        };
+
+        const handleTouchEnd = (e: TouchEvent) => {
+            e.preventDefault();
+            if (!drawing.value) return;
+            if (currentTool.value === 'rectangle' || currentTool.value === 'circle') {
+                ctx.value?.drawImage(overlayCanvas.value as CanvasImageSource, 0, 0);
+            }
+            overlayCtx.value?.clearRect(0, 0, props.canvasWidth, props.canvasHeight);
+            saveState();
+            drawing.value = false;
         };
 
         onMounted(() => {
@@ -320,9 +373,35 @@ export default defineComponent({
                 canvasContainer.appendChild(overlayCanvas.value);
             }
 
+            const adjustCanvasSize = () => {
+                const containerWidth =
+                    document.querySelector('.canvas-container')?.clientWidth || 0;
+                const scale = containerWidth / props.canvasWidth;
+
+                if (scale < 1) {
+                    drawingCanvas.value!.width = props.canvasWidth * scale;
+                    drawingCanvas.value!.height = props.canvasHeight * scale;
+                } else {
+                    drawingCanvas.value!.width = props.canvasWidth;
+                    drawingCanvas.value!.height = props.canvasHeight;
+                }
+
+                ctx.value = drawingCanvas.value!.getContext('2d');
+                overlayCanvas.value!.width = drawingCanvas.value!.width;
+                overlayCanvas.value!.height = drawingCanvas.value!.height;
+            };
+
+            adjustCanvasSize();
+            window.addEventListener('resize', adjustCanvasSize);
+
             drawingCanvas.value.addEventListener('mousedown', handleMouseDown);
             drawingCanvas.value.addEventListener('mouseup', handleMouseUp);
             drawingCanvas.value.addEventListener('mousemove', handleMouseMove);
+
+            drawingCanvas.value.addEventListener('touchstart', handleTouchStart);
+            drawingCanvas.value.addEventListener('touchmove', handleTouchMove);
+            drawingCanvas.value.addEventListener('touchend', handleTouchEnd);
+
             saveState();
         });
 
@@ -467,5 +546,41 @@ canvas {
     cursor: crosshair;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    touch-action: none;
+}
+
+@media (max-width: 768px) {
+    .drawing-container {
+        padding: 10px;
+    }
+
+    .canvas-container {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .controls {
+        flex-direction: column;
+        width: auto;
+        padding: 20px;
+        gap: 8px;
+    }
+
+    .tool-buttons {
+        gap: 8px;
+    }
+
+    .control-group {
+        flex-direction: column;
+    }
+
+    .controls input[type='range'] {
+        width: 100%;
+    }
+
+    canvas {
+        width: 100%;
+        height: auto;
+    }
 }
 </style>
