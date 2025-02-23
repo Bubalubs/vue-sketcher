@@ -28,6 +28,8 @@
     "devDependencies": {
         "@eslint/config-array": "^0.19.0",
         "@eslint/object-schema": "^2.1.0",
+        "@fortawesome/free-solid-svg-icons": "^6.7.2",
+        "@fortawesome/vue-fontawesome": "^3.0.8",
         "@typescript-eslint/eslint-plugin": "^8.21.0",
         "@vitejs/plugin-vue": "^5.2.1",
         "@vue/compiler-sfc": "^3.5.13",

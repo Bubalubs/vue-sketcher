@@ -2,7 +2,7 @@
     <div class="drawing-container">
         <div class="controls">
             <div class="control-group">
-                <label for="colorPicker">Color:</label>
+                <label for="colorPicker">Color</label>
                 <input
                     type="color"
                     id="colorPicker"
@@ -12,7 +12,7 @@
             </div>
 
             <div class="control-group">
-                <label for="brushSize">Size:</label>
+                <label for="brushSize">Size</label>
                 <input
                     type="range"
                     id="brushSize"
@@ -35,10 +35,34 @@
                 </div>
             </div>
 
-            <button @click="undoCanvas">Undo</button>
-            <button @click="redoCanvas">Redo</button>
-            <button @click="saveCanvasImage">Save</button>
-            <button @click="clearCanvas">Clear</button>
+            <button @click="undoCanvas" title="Undo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon">
+                    <path
+                        d="M125.7 160l50.3 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L48 224c-17.7 0-32-14.3-32-32L16 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 51.2L97.6 97.6c87.5-87.5 229.3-87.5 316.8 0s87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3s-163.8-62.5-226.3 0L125.7 160z"
+                    />
+                </svg>
+            </button>
+            <button @click="redoCanvas">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon">
+                    <path
+                        d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"
+                    />
+                </svg>
+            </button>
+            <button @click="saveCanvasImage">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon">
+                    <path
+                        d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-242.7c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32L64 32zm0 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32L96 224c-17.7 0-32-14.3-32-32l0-64zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"
+                    />
+                </svg>
+            </button>
+            <button @click="clearCanvas">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon">
+                    <path
+                        d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
+                    />
+                </svg>
+            </button>
         </div>
 
         <div class="canvas-container" :style="{ backgroundColor: backgroundColor }">
@@ -508,11 +532,15 @@ export default defineComponent({
     background-color: #000;
     color: #fff;
     border: none;
-    padding: 8px 15px;
+    padding: 10px 10px 6px 10px;
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+    background-color: #2e41bf;
 }
 
 .controls input[type='range'] {
@@ -537,8 +565,10 @@ export default defineComponent({
     flex-shrink: 0;
 }
 
-.controls button:hover {
-    background-color: #333;
+.icon {
+    width: 18px;
+    height: 18px;
+    fill: white;
 }
 
 canvas {
